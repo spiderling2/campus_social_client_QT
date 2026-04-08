@@ -12,6 +12,7 @@ public:
 signals:
     void createEventRequested(const QString& eventName);
     void joinEventRequested(const QString& eventName);
+    void eventSelected(const QString& eventName);
 
 private:
     QLineEdit* eventEdit;

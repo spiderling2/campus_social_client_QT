@@ -12,6 +12,7 @@ ChatWidget::ChatWidget(QWidget* parent) : QWidget(parent) {
 
     setupLayout();
     setupConnections();
+    switchToEvent("default_event");
 }
 
 void ChatWidget::setupLayout() {
@@ -28,7 +29,11 @@ void ChatWidget::setupLayout() {
 
 void ChatWidget::setupConnections() {
     connect(sendBtn, &QPushButton::clicked, [this]() {
-        emit sendMessageRequested("default_event", msgEdit->text());
+        const QString message = msgEdit->text().trimmed();
+        if (message.isEmpty()) {
+            return;
+        }
+        emit sendMessageRequested(currentEvent, message);
         msgEdit->clear();
     });
 }

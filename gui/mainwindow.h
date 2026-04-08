@@ -1,5 +1,6 @@
 #pragma once
 #include <QMainWindow>
+#include <QToolButton>
 #include "LoginWidget.h"
 #include "EventWidget.h"
 #include "ChatWidget.h"
@@ -18,8 +19,10 @@ private:
     ChatWidget* chatWidget;
     FileWidget* fileWidget;
     NetworkClient* network;
+    QToolButton* profileBtn;
 
     void setupLayout();
     void setupConnections();
     void setupMenu();
+    void setupProfileMenu();
 };

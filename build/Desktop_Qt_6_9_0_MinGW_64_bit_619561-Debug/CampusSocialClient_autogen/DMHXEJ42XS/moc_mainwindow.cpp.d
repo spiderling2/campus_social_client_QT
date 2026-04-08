@@ -188,6 +188,7 @@ D:/QT/qt\ experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_6195
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/QProgressBar \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/QPushButton \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/QTextBrowser \
+  D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/QToolButton \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/QWidget \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -211,6 +212,7 @@ D:/QT/qt\ experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_6195
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qtabwidget.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qtextbrowser.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qtextedit.h \
+  D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qtoolbutton.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qtwidgetsexports.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtWidgets/qtwidgetsglobal.h \

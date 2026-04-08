@@ -8,6 +8,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
+#include <QHBoxLayout>
+#include <QMenu>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     network = new NetworkClient(this);
@@ -16,8 +18,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     eventWidget = new EventWidget(this);
     chatWidget = new ChatWidget(this);
     fileWidget = new FileWidget(this);
+    profileBtn = new QToolButton(this);
 
-    setupMenu();      // 顶部菜单栏
+    setupProfileMenu();  // 右上角个人信息菜单
     setupLayout();    // 左中右布局
     setupConnections(); // 信号槽连接
 
@@ -27,20 +30,26 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     fileWidget->setEnabled(false);
 }
 
-void MainWindow::setupMenu() {
-    QMenuBar* menuBar = new QMenuBar(this);
+void MainWindow::setupProfileMenu() {
+    profileBtn->setText("👤");
+    profileBtn->setToolTip("个人信息");
+    profileBtn->setPopupMode(QToolButton::InstantPopup);
+    profileBtn->setObjectName("profileBtn");
 
-    QMenu* userMenu = menuBar->addMenu("用户");
-    QAction* loginAction = userMenu->addAction("登录");
-    QAction* registerAction = userMenu->addAction("注册");
-    QAction* logoutAction = userMenu->addAction("退出登录");
+    QMenu* profileMenu = new QMenu(profileBtn);
+    QAction* registerAction = profileMenu->addAction("注册");
+    QAction* loginAction = profileMenu->addAction("登录");
+    profileMenu->addSeparator();
+    QAction* logoutAction = profileMenu->addAction("登出");
+    profileBtn->setMenu(profileMenu);
 
-    setMenuBar(menuBar);
 
     // 登录弹窗
     connect(loginAction, &QAction::triggered, this, [this]() {
         // 使用现有 LoginWidget
         loginWidget->show();
+        loginWidget->raise();
+        loginWidget->activateWindow();
     });
 
     // 注册弹窗
@@ -57,25 +66,28 @@ void MainWindow::setupLayout() {
     setCentralWidget(central);
 
     // 左右可拖动布局
+    QVBoxLayout* mainLayout = new QVBoxLayout(central);
+
+    QHBoxLayout* topBarLayout = new QHBoxLayout();
+    topBarLayout->addStretch();
+    topBarLayout->addWidget(profileBtn);
+    mainLayout->addLayout(topBarLayout);
+
+    // 左右布局：左侧事件选择，中间消息发送
     QSplitter* hSplitter = new QSplitter(Qt::Horizontal, central);
 
     // 左侧事件列表
     hSplitter->addWidget(eventWidget);
 
-    // 右侧聊天+文件
-    QVBoxLayout* rightLayout = new QVBoxLayout();
-    rightLayout->addWidget(chatWidget, 3);
-    rightLayout->addWidget(fileWidget, 1);
-
-    QWidget* rightContainer = new QWidget();
-    rightContainer->setLayout(rightLayout);
-    hSplitter->addWidget(rightContainer);
+    // 中间消息发送
+    hSplitter->addWidget(chatWidget);
 
     hSplitter->setStretchFactor(0, 1); // 左边占比
-    hSplitter->setStretchFactor(1, 3); // 右边占比
+    hSplitter->setStretchFactor(1, 3); // 中间占比
 
-    QVBoxLayout* mainLayout = new QVBoxLayout(central);
+
     mainLayout->addWidget(hSplitter);
+    mainLayout->addWidget(fileWidget);
 }
 
 void MainWindow::setupConnections() {
@@ -116,6 +128,6 @@ void MainWindow::setupConnections() {
             chatWidget, &ChatWidget::appendMessage);
 
     // 选择事件切换聊天内容
-    // connect(eventWidget, &EventWidget::eventSelected,
-    //         chatWidget, &ChatWidget::switchToEvent);
+    connect(eventWidget, &EventWidget::eventSelected,
+            chatWidget, &ChatWidget::switchToEvent);
 }

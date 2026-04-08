@@ -27,9 +27,32 @@ void EventWidget::setupLayout() {
 
 void EventWidget::setupConnections() {
     connect(createBtn, &QPushButton::clicked, [this]() {
-        emit createEventRequested(eventEdit->text());
+        const QString eventName = eventEdit->text().trimmed();
+        if (!eventName.isEmpty()) {
+            emit createEventRequested(eventName);
+        }
     });
     connect(joinBtn, &QPushButton::clicked, [this]() {
-        emit joinEventRequested(eventEdit->text());
+        const QString eventName = eventEdit->text().trimmed();
+        if (eventName.isEmpty()) {
+            return;
+        }
+        bool exists = false;
+        for (int i = 0; i < joinedList->count(); ++i) {
+            if (joinedList->item(i)->text() == eventName) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            joinedList->addItem(eventName);
+        }
+        emit joinEventRequested(eventName);
+    });
+
+    connect(joinedList, &QListWidget::itemClicked, [this](QListWidgetItem* item) {
+        if (item != nullptr) {
+            emit eventSelected(item->text());
+        }
     });
 }
