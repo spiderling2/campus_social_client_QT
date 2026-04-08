@@ -1,0 +1,100 @@
+/* 整个应用背景 */
+QWidget {
+    background-color: #ffffff;
+    font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+    font-size: 12pt;
+}
+
+/* QLabel 默认字体 */
+QLabel {
+    font-weight: bold;
+    color: #333;
+}
+QLineEdit {
+    border: 2px solid #c4c4c4;
+    border-radius: 8px;
+    padding: 4px 8px;
+    background: #ffffff;
+}
+
+QLineEdit:focus {
+    border: 2px solid #409eff;
+    background: #f5faff;
+}
+
+QPushButton {
+    background-color: #409eff;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-weight: bold;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    background-color: #66b1ff;
+}
+
+QPushButton:pressed {
+    background-color: #337ecc;
+}
+
+QTextBrowser {
+    border: 2px solid #c4c4c4;
+    border-radius: 8px;
+    padding: 6px;
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* 滚动条 */
+QScrollBar:vertical {
+    background: #f0f2f5;
+    width: 12px;
+    margin: 0px 0px 0px 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #c4c4c4;
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #a0a0a0;
+}
+
+QScrollBar::add-line, QScrollBar::sub-line {
+    height: 0px;
+}
+
+QListWidget {
+    border: 2px solid #c4c4c4;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 4px;
+}
+
+QListWidget::item {
+    padding: 6px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+QListWidget::item:selected {
+    background-color: #409eff;
+    color: white;
+    border-radius: 4px;
+}
+
+QProgressBar {
+    border: 2px solid #c4c4c4;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f0f0f0;
+    height: 18px;
+}
+
+QProgressBar::chunk {
+    background-color: #409eff;
+    border-radius: 8px;
+}

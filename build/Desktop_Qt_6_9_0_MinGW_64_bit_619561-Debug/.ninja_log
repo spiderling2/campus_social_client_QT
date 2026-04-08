@@ -1,0 +1,37 @@
+# ninja log v6
+17	342	7969551833982843	CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+17	342	7969551833982843	CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+447	545	7969423287795183	CMakeFiles/CampusSocialClient.dir/CampusSocialClient_autogen/EWIEGA46WW/qrc_resources.cpp.obj	ea190e1f0e2e988a
+17	342	7969551833982843	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+17	342	7969551833982843	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+315	423	7969423287464476	CampusSocialClient_autogen/EWIEGA46WW/qrc_resources.cpp	edbab64054c5e2e7
+315	423	7969423287464476	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/EWIEGA46WW/qrc_resources.cpp	edbab64054c5e2e7
+2152	8471	7969348700521318	CMakeFiles/CampusSocialClient.dir/gui/filewidget.cpp.obj	bd59c70a7105baec
+1990	6986	7969343995953096	CMakeFiles/CampusSocialClient.dir/mainwindow.cpp.obj	a29162789b398e64
+948	4412	7969544035963845	CMakeFiles/CampusSocialClient.dir/network/networkclient.cpp.obj	15d14ea1b5c0c70
+1142	5040	7969548260165771	CMakeFiles/CampusSocialClient.dir/gui/chatwidget.cpp.obj	9fddab6190918bb8
+343	2815	7969551837245660	CMakeFiles/CampusSocialClient.dir/gui/loginwidget.cpp.obj	15452187e0e7fa50
+2815	3338	7969551861972313	CampusSocialClient.exe	69609529f1e74cda
+2113	8544	7969348700132362	CMakeFiles/CampusSocialClient.dir/gui/eventwidget.cpp.obj	598456228a5e5fdb
+1127	6097	7969548260026127	CMakeFiles/CampusSocialClient.dir/main.cpp.obj	3dfb080eb427dacc
+1111	6050	7969548259856598	CMakeFiles/CampusSocialClient.dir/CampusSocialClient_autogen/mocs_compilation.cpp.obj	7b1282d85630a5e9
+8	75	7969348677038767	CMakeFiles/clean.additional	b2d75c50270a40ee
+76	89	7969348677716605	clean	b213993f088e7714
+1160	6017	7969548260345284	CMakeFiles/CampusSocialClient.dir/gui/mainwindow.cpp.obj	3f4f7e951f5f1d6
+56	694	7972468605364704	CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+56	694	7972468605364704	CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+56	694	7972468605364704	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+56	694	7972468605364704	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+720	11147	7972468607743535	CMakeFiles/CampusSocialClient.dir/main.cpp.obj	3dfb080eb427dacc
+696	11189	7972468607504165	CMakeFiles/CampusSocialClient.dir/CampusSocialClient_autogen/mocs_compilation.cpp.obj	7b1282d85630a5e9
+12	852	7973335673469804	CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+12	852	7973335673469804	CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+12	852	7973335673469804	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+12	852	7973335673469804	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+867	3093	7973335682009554	CMakeFiles/CampusSocialClient.dir/service/userservice.cpp.obj	3c1caad5e9beaeac
+14	393	7973335889370845	CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+14	393	7973335889370845	CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+14	393	7973335889370845	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/timestamp	9c061ff5d70e97fc
+14	393	7973335889370845	D:/QT/qt experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/mocs_compilation.cpp	9c061ff5d70e97fc
+394	3911	7973335893170257	CMakeFiles/CampusSocialClient.dir/network/networkclient.cpp.obj	15d14ea1b5c0c70
+3911	8908	7973335928336553	CampusSocialClient.exe	8fc2de7fb9e37d50

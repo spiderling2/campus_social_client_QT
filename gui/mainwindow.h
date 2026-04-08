@@ -1,0 +1,25 @@
+#pragma once
+#include <QMainWindow>
+#include "LoginWidget.h"
+#include "EventWidget.h"
+#include "ChatWidget.h"
+#include "FileWidget.h"
+#include "../network/NetworkClient.h"
+
+class MainWindow : public QMainWindow {
+    Q_OBJECT
+public:
+    MainWindow(QWidget* parent = nullptr);
+
+
+private:
+    LoginWidget* loginWidget;
+    EventWidget* eventWidget;
+    ChatWidget* chatWidget;
+    FileWidget* fileWidget;
+    NetworkClient* network;
+
+    void setupLayout();
+    void setupConnections();
+    void setupMenu();
+};
