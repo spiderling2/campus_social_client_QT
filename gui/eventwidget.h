@@ -10,9 +10,9 @@ public:
     explicit EventWidget(QWidget* parent = nullptr);
 
 signals:
-    void createEventRequested(const QString& eventName);
-    void joinEventRequested(const QString& eventName);
-    void eventSelected(const QString& eventName);
+    void createEventRequested(const QString& userName,const QString& eventName);
+    void joinEventRequested(const QString& userName,const QString& eventName);
+    void eventSelected(const QString& userName,const QString& eventName);
 
 private:
     QLineEdit* eventEdit;

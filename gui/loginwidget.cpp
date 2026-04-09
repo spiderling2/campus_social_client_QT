@@ -1,6 +1,7 @@
 #include "loginwidget.h"
 #include <QHBoxLayout>
 #include <QLabel>
+#include"../service/userservice.h"
 
 LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent,Qt::Window) {
     usernameEdit = new QLineEdit(this);
@@ -35,6 +36,10 @@ void LoginWidget::setupConnections() {
         emit registerRequested(usernameEdit->text(), passwordEdit->text());
     });
     connect(logoutBtn, &QPushButton::clicked, [this]() {
-        emit logoutRequested();
+
+        QString userName=UserService::instance().get_username();
+
+
+        emit logoutRequested(userName);
     });
 }

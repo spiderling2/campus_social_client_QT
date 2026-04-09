@@ -2,9 +2,11 @@
 #include <QFile>
 #include <QApplication>
 #include  "service/userservice.h"
-
+#include <windows.h>
 int main(int argc, char *argv[])
 {
+    // 设置控制台为 UTF-8
+    SetConsoleOutputCP(CP_UTF8);
     QApplication app(argc, argv);
 
     // 加载 QSS 样式表

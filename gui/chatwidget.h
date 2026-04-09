@@ -10,7 +10,7 @@ public:
     explicit ChatWidget(QWidget* parent = nullptr);
 
 signals:
-    void sendMessageRequested(const QString& eventName, const QString& message);
+    void sendMessageRequested(const QString& userName,const QString& eventName, const QString& message);
 
 public slots:
     void appendMessage(const QString &msg);

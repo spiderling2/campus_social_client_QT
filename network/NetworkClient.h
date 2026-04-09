@@ -11,10 +11,10 @@ public:
 
     void login(const QString& username, const QString& password);
     void registerUser(const QString& username, const QString& password);
-    void logout();
-    void createEvent(const QString& eventName);
-    void joinEvent(const QString& eventName);
-    void sendMessage(const QString& eventName, const QString& message);
+    void logout(const QString& username);
+    void createEvent(const QString& username,const QString& eventName);
+    void joinEvent(const QString userName,const QString& eventName);
+    void sendMessage(const QString& userName,const QString& eventName, const QString& message);
     void sendFile(const QString& eventName, const QString& filepath);
     void onReadyRead();
     QString handle_message(const QJsonObject& doc);

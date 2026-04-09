@@ -449,6 +449,12 @@
 			null
 		],
 		[
+			"D:/QT/qt experiment/CampusSocialClient/service/eventservice.h",
+			"MU",
+			"EZIERFRHL2/moc_eventservice.cpp",
+			null
+		],
+		[
 			"D:/QT/qt experiment/CampusSocialClient/service/userservice.h",
 			"MU",
 			"EZIERFRHL2/moc_userservice.cpp",
@@ -556,6 +562,11 @@
 		[ "D:/QT/qt experiment/CampusSocialClient/main.cpp", "MU", null ],
 		[
 			"D:/QT/qt experiment/CampusSocialClient/network/networkclient.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/QT/qt experiment/CampusSocialClient/service/eventservice.cpp",
 			"MU",
 			null
 		],

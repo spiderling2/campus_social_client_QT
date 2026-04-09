@@ -36,6 +36,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         gui/mainwindow.h gui/mainwindow.cpp
         network/jsontool.h
         service/userservice.h service/userservice.cpp
+        service/eventservice.h service/eventservice.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CampusSocialClient APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

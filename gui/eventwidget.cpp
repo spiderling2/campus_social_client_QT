@@ -2,7 +2,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-
+#include"../service/userservice.h"
 EventWidget::EventWidget(QWidget* parent) : QWidget(parent) {
     eventEdit = new QLineEdit(this);
     createBtn = new QPushButton("Create Event", this);
@@ -29,7 +29,8 @@ void EventWidget::setupConnections() {
     connect(createBtn, &QPushButton::clicked, [this]() {
         const QString eventName = eventEdit->text().trimmed();
         if (!eventName.isEmpty()) {
-            emit createEventRequested(eventName);
+            QString userName=UserService::instance().get_username();
+            emit createEventRequested(userName,eventName);
         }
     });
     connect(joinBtn, &QPushButton::clicked, [this]() {
@@ -47,12 +48,15 @@ void EventWidget::setupConnections() {
         if (!exists) {
             joinedList->addItem(eventName);
         }
-        emit joinEventRequested(eventName);
+        QString userName=UserService::instance().get_username();
+        emit joinEventRequested(userName,eventName);
     });
 
     connect(joinedList, &QListWidget::itemClicked, [this](QListWidgetItem* item) {
         if (item != nullptr) {
-            emit eventSelected(item->text());
+             QString userName=UserService::instance().get_username();
+            qDebug()<<"event is"<<item->text();
+            emit eventSelected(userName,item->text());
         }
     });
 }

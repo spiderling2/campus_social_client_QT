@@ -11,7 +11,7 @@ public:
 signals:
     void loginRequested(const QString& username, const QString& password);
     void registerRequested(const QString& username, const QString& password);
-    void logoutRequested();
+    void logoutRequested(const QString&username);
 
 private:
     QLineEdit* usernameEdit;

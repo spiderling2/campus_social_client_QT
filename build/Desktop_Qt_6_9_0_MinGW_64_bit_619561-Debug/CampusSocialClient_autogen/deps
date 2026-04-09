@@ -709,6 +709,8 @@ CampusSocialClient_autogen/timestamp: \
 	D:/QT/qt\ experiment/CampusSocialClient/network/jsontool.h \
 	D:/QT/qt\ experiment/CampusSocialClient/network/networkclient.cpp \
 	D:/QT/qt\ experiment/CampusSocialClient/resources.qrc \
+	D:/QT/qt\ experiment/CampusSocialClient/service/eventservice.cpp \
+	D:/QT/qt\ experiment/CampusSocialClient/service/eventservice.h \
 	D:/QT/qt\ experiment/CampusSocialClient/service/userservice.cpp \
 	D:/QT/qt\ experiment/CampusSocialClient/service/userservice.h \
 	D:/QT/QTtool/Tools/CMake_64/bin/cmake.exe

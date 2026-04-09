@@ -42,6 +42,7 @@ template <> constexpr inline auto ChatWidget::qt_create_metaobjectdata<qt_meta_t
         "ChatWidget",
         "sendMessageRequested",
         "",
+        "userName",
         "eventName",
         "message",
         "appendMessage",
@@ -51,16 +52,16 @@ template <> constexpr inline auto ChatWidget::qt_create_metaobjectdata<qt_meta_t
 
     QtMocHelpers::UintData qt_methods {
         // Signal 'sendMessageRequested'
-        QtMocHelpers::SignalData<void(const QString &, const QString &)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 3 }, { QMetaType::QString, 4 },
+        QtMocHelpers::SignalData<void(const QString &, const QString &, const QString &)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 3 }, { QMetaType::QString, 4 }, { QMetaType::QString, 5 },
         }}),
         // Slot 'appendMessage'
-        QtMocHelpers::SlotData<void(const QString &)>(5, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 6 },
+        QtMocHelpers::SlotData<void(const QString &)>(6, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 7 },
         }}),
         // Slot 'switchToEvent'
-        QtMocHelpers::SlotData<void(const QString &)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 3 },
+        QtMocHelpers::SlotData<void(const QString &)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 4 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -85,14 +86,14 @@ void ChatWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     auto *_t = static_cast<ChatWidget *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->sendMessageRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 0: _t->sendMessageRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
         case 1: _t->appendMessage((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 2: _t->switchToEvent((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         default: ;
         }
     }
     if (_c == QMetaObject::IndexOfMethod) {
-        if (QtMocHelpers::indexOfMethod<void (ChatWidget::*)(const QString & , const QString & )>(_a, &ChatWidget::sendMessageRequested, 0))
+        if (QtMocHelpers::indexOfMethod<void (ChatWidget::*)(const QString & , const QString & , const QString & )>(_a, &ChatWidget::sendMessageRequested, 0))
             return;
     }
 }
@@ -129,8 +130,8 @@ int ChatWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void ChatWidget::sendMessageRequested(const QString & _t1, const QString & _t2)
+void ChatWidget::sendMessageRequested(const QString & _t1, const QString & _t2, const QString & _t3)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1, _t2);
+    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1, _t2, _t3);
 }
 QT_WARNING_POP

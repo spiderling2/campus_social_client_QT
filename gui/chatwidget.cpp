@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include<QString>
-
+#include"../service/userservice.h"
 ChatWidget::ChatWidget(QWidget* parent) : QWidget(parent) {
     chatArea = new QTextBrowser(this);
     msgEdit = new QLineEdit(this);
@@ -33,7 +33,8 @@ void ChatWidget::setupConnections() {
         if (message.isEmpty()) {
             return;
         }
-        emit sendMessageRequested(currentEvent, message);
+        QString userName=UserService::instance().get_username();
+        emit sendMessageRequested(userName,currentEvent, message);
         msgEdit->clear();
     });
 }
@@ -47,5 +48,6 @@ void ChatWidget::appendMessage(const QString &msg) {
 
 void ChatWidget::switchToEvent(const QString& eventName) {
     currentEvent = eventName;
+    qDebug()<<"current event is"<<eventName;
     chatArea->append(QString("系统：已切换到事件 '%1'").arg(currentEvent));
 }

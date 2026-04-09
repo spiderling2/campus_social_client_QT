@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QMenu>
+#include"../service/userservice.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     network = new NetworkClient(this);
@@ -58,7 +59,10 @@ void MainWindow::setupProfileMenu() {
     });
 
     // 退出登录
-    connect(logoutAction, &QAction::triggered, loginWidget, &LoginWidget::logoutRequested);
+    connect(logoutAction, &QAction::triggered, this,[this](){
+        QString username=UserService::instance().get_username();
+         emit loginWidget->logoutRequested(username);
+    });
 }
 
 void MainWindow::setupLayout() {

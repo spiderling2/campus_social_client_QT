@@ -1,4 +1,4 @@
-D:/QT/qt\ experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/DMHXEJ42XS/moc_loginwidget.cpp: D:/QT/qt\ experiment/CampusSocialClient/gui/loginwidget.h \
+D:/QT/qt\ experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/DMHXEJ42XS/moc_LoginWidget.cpp: D:/QT/qt\ experiment/CampusSocialClient/gui/LoginWidget.h \
   D:/QT/qt\ experiment/CampusSocialClient/build/Desktop_Qt_6_9_0_MinGW_64_bit_619561-Debug/CampusSocialClient_autogen/moc_predefs.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtCore/q17memory.h \
   D:/QT/QTtool/6.9.0/mingw_64/include/QtCore/q20functional.h \

@@ -36,32 +36,54 @@ void NetworkClient::registerUser(const QString& username, const QString& passwor
     qDebug()<<"消息已发送";
 }
 
-void NetworkClient::logout() {
-    QJsonObject obj=JsonTool::make_request("logout","success");
+void NetworkClient::logout(const QString& username) {
+
+
+
+    QJsonObject obj;
+    QJsonObject data;
+    obj["type"]="logout";
+    data["username"]=username;
+    obj["data"]=data;
     sendJson(obj);
 
 
 }
 
-void NetworkClient::createEvent(const QString& eventName) {
+void NetworkClient::createEvent(const QString& username,const QString& eventName) {
 
 
-    QJsonObject obj,data;
-    data["username"]=UserService::instance().get_username();
+    QJsonObject obj;
+    QJsonObject data;
+    obj["type"]="create_event";
+    data["username"]=username;
     data["eventname"]=eventName;
-    obj=JsonTool::make_request("create_event","success","",data);
-    socket->write(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+    obj["data"]=data;
+    sendJson(obj);
 
 }
 
-void NetworkClient::joinEvent(const QString& eventName) {
-    QJsonObject obj {{"type","join_event"}, {"event", eventName}};
-    socket->write(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+void NetworkClient::joinEvent(const QString userName,const QString& eventName) {
+
+    QJsonObject obj;
+    QJsonObject data;
+    obj["type"]="join_event";
+    data["username"]=userName;
+    data["eventname"]=eventName;
+    obj["data"]=data;
+    sendJson(obj);
 }
 
-void NetworkClient::sendMessage(const QString& eventName, const QString& message) {
-    QJsonObject obj {{"type","send"}, {"event", eventName}, {"content", message}};
-    socket->write(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+void NetworkClient::sendMessage(const QString& userName,const QString& eventName, const QString& message) {
+
+    QJsonObject obj;
+    QJsonObject data;
+    obj["type"]="send";
+    data["username"]=userName;
+    data["eventname"]=eventName;
+    data["content"]=message;
+    obj["data"]=data;
+    sendJson(obj);
 }
 
 void NetworkClient::sendFile(const QString& eventName, const QString& filepath) {
@@ -138,6 +160,18 @@ QString NetworkClient::handle_message(const QJsonObject& msg)
             return "[logout]"+message;
 
         }
+        else if(type=="create_event_response")
+        {
+            return "create_event_response"+message;
+        }
+        else if(type=="join_event_response")
+        {
+            return "join_event_response"+message;
+        }
+        else if(type=="message_broadcast")
+        {
+            return "["+data.value("username").toString()+"]"+data.value("content").toString();
+        }
     }
     else if(status=="error")
     {
@@ -157,6 +191,13 @@ void NetworkClient::sendJson(const QJsonObject& obj)
     QByteArray header;
     header.resize(4);
     qToBigEndian(len, reinterpret_cast<uchar*>(header.data()));
+    QJsonDocument doc(obj);
+
+    // 转成字符串
+    QString jsonStr = doc.toJson(QJsonDocument::Compact); // 或 QJsonDocument::Indented 美化输出
+
+    // 输出到控制台
+    qDebug() << jsonStr;
 
     socket->write(header);
     socket->write(jsonData);
