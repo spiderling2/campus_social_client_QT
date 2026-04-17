@@ -1,0 +1,70 @@
+diff --git a/styles/styles.qss b/styles/styles.qss
+index 3b8a1d11b1e6c92c094b22c6b31864eeb4d5f44c..3363b95e2cfbef744e6448d76f247a2e556b74c6 100644
+--- a/styles/styles.qss
++++ b/styles/styles.qss
+@@ -17,50 +17,65 @@ QLineEdit {
+     background: #ffffff;
+ }
+ 
+ QLineEdit:focus {
+     border: 2px solid #409eff;
+     background: #f5faff;
+ }
+ 
+ QPushButton {
+     background-color: #409eff;
+     color: white;
+     border-radius: 8px;
+     padding: 6px 12px;
+     font-weight: bold;
+     min-width: 80px;
+ }
+ 
+ QPushButton:hover {
+     background-color: #66b1ff;
+ }
+ 
+ QPushButton:pressed {
+     background-color: #337ecc;
+ }
+ 
++QToolButton#profileBtn {
++    min-width: 42px;
++    max-width: 42px;
++    min-height: 42px;
++    max-height: 42px;
++    border-radius: 21px;
++    border: 2px solid #409eff;
++    background-color: #e8f3ff;
++    font-size: 18px;
++}
++
++QToolButton#profileBtn:hover {
++    background-color: #d5eaff;
++}
++
+ QTextBrowser {
+     border: 2px solid #c4c4c4;
+     border-radius: 8px;
+     padding: 6px;
+     background-color: #ffffff;
+     color: #333;
+ }
+ 
+ /* 滚动条 */
+ QScrollBar:vertical {
+     background: #f0f2f5;
+     width: 12px;
+     margin: 0px 0px 0px 0px;
+ }
+ 
+ QScrollBar::handle:vertical {
+     background: #c4c4c4;
+     min-height: 20px;
+     border-radius: 6px;
+ }
+ 
+ QScrollBar::handle:vertical:hover {
+     background: #a0a0a0;
+ }
+ 
