@@ -11,6 +11,7 @@ EventWidget::EventWidget(QWidget* parent) : QWidget(parent) {
 
     setupLayout();
     setupConnections();
+    joinedList->setObjectName("joinedList");
 }
 
 void EventWidget::setupLayout() {

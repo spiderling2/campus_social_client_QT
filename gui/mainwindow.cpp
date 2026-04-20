@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QMenu>
+#include <QPainter>
 #include"../service/userservice.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     eventWidget->setEnabled(false);
     chatWidget->setEnabled(false);
     fileWidget->setEnabled(false);
+    this->setObjectName("mainWindow");
 }
 
 void MainWindow::setupProfileMenu() {
@@ -67,6 +69,8 @@ void MainWindow::setupProfileMenu() {
 
 void MainWindow::setupLayout() {
     QWidget* central = new QWidget(this);
+    central->setObjectName("centralWidget");
+    central->setAttribute(Qt::WA_StyledBackground, true);
     setCentralWidget(central);
 
     // 左右可拖动布局
@@ -152,4 +156,10 @@ void MainWindow::closeEvent(QCloseEvent* event)
         network->disconnectFromServer(); // 关闭连接
 
     event->accept(); // 允许窗口关闭
+}
+void MainWindow::paintEvent(QPaintEvent *event) {
+    QPainter painter(this);
+    QPixmap bg(":/images/backgrounds/main_bg.png");
+    painter.drawPixmap(this->rect(), bg);  // 自动拉伸填充整个窗口
+    QMainWindow::paintEvent(event);
 }

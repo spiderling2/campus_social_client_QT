@@ -37,6 +37,20 @@ private:
 
     void setupLayout();
     void setupConnections();
+
+
+};
+
+class IconButton : public QPushButton {
+    Q_OBJECT
+public:
+    explicit IconButton(QWidget* parent = nullptr) : QPushButton(parent) {}
+protected:
+    void resizeEvent(QResizeEvent* event) override {
+        QPushButton::resizeEvent(event);
+        int size = qMin(width(), height());
+        setIconSize(QSize(size, size));
+    }
 };
 
 

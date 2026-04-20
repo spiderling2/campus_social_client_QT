@@ -26,4 +26,5 @@ private:
     void setupMenu();
     void setupProfileMenu();
      void closeEvent(QCloseEvent* event) override;
+    void paintEvent(QPaintEvent *event) override;
 };

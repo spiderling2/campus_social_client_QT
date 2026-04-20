@@ -12,7 +12,7 @@
 ChatWidget::ChatWidget(QWidget* parent) : QWidget(parent) {
     chatArea = new QTextBrowser(this);
     msgEdit = new RichTextEdit(this);
-    sendBtn = new QPushButton("Send", this);
+    sendBtn = new QPushButton("Send",this);
 
     setupLayout();
     setupConnections();

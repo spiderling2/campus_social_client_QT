@@ -31,10 +31,12 @@ void LoginWidget::setupLayout() {
 void LoginWidget::setupConnections() {
     connect(loginBtn, &QPushButton::clicked, [this]() {
         emit loginRequested(usernameEdit->text(), passwordEdit->text());
+        this->close();
     });
     connect(registerBtn, &QPushButton::clicked, [this]() {
         emit registerRequested(usernameEdit->text(), passwordEdit->text());
         //emit loginRequested(usernameEdit->text(), passwordEdit->text());
+        this->close();
     });
     connect(logoutBtn, &QPushButton::clicked, [this]() {
 
@@ -42,5 +44,6 @@ void LoginWidget::setupConnections() {
 
 
         emit logoutRequested(userName);
+        this->close();
     });
 }
