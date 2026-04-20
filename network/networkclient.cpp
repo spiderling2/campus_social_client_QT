@@ -135,6 +135,8 @@ void NetworkClient::onReadyRead()
                     file.write(receivingFile.data);
                     file.close();
                     qDebug() << "file recived successfully:" << savePath;
+                    // 发信号通知 UI 显示
+                    emit fileReceived(current_event, receivingFile.filename, savePath);
                 } else {
                     qDebug() << "error:" << savePath;
                 }

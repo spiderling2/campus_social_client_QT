@@ -46,6 +46,8 @@ signals:
     void getEventsSuccess(const QVariantList& events);
     void getEventsRequested(const QString& userName);  // 新增：刷新事件信号
 
+    void fileReceived(const QString &eventName, const QString &filename, const QString &filePath);
+
 private slots:
     void onGetEventsRequested(const QString& userName);  // 定时刷新槽函数
 

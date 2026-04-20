@@ -141,6 +141,9 @@ void MainWindow::setupConnections() {
     connect(network,&NetworkClient::getEventsSuccess,
             eventWidget,&EventWidget::getEvents);
 
+    connect(network, &NetworkClient::fileReceived,
+            chatWidget, &ChatWidget::appendFile);
+
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)

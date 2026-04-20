@@ -21,6 +21,7 @@ public slots:
     void switchToEvent(const QString& eventName);
 
     void onSendClicked();
+    void appendFile(const QString &username, const QString &filename, const QString &filePath);
 
 private:
     QTextBrowser* chatArea;

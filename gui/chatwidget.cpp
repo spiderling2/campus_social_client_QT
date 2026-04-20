@@ -6,6 +6,9 @@
 #include<QString>
 #include <QRegularExpression>
 #include"../service/userservice.h"
+#include <QDesktopServices>
+#include <QUrl>
+#include <QMessageBox>
 ChatWidget::ChatWidget(QWidget* parent) : QWidget(parent) {
     chatArea = new QTextBrowser(this);
     msgEdit = new RichTextEdit(this);
@@ -14,6 +17,22 @@ ChatWidget::ChatWidget(QWidget* parent) : QWidget(parent) {
     setupLayout();
     setupConnections();
     switchToEvent("default_event");
+    chatArea->setOpenLinks(false);
+    chatArea->setOpenExternalLinks(false);
+
+    connect(chatArea, &QTextBrowser::anchorClicked,
+            this, [=](const QUrl &url) {
+
+                QString filePath = url.toLocalFile();
+
+                if (!QFile::exists(filePath)) {
+                    QMessageBox::warning(this, "文件不存在",
+                                         QString("文件不存在或已被删除：\n%1").arg(filePath));
+                    return;
+                }
+
+                QDesktopServices::openUrl(url);
+            });
 }
 
 void ChatWidget::setupLayout() {
@@ -76,4 +95,27 @@ void ChatWidget::onSendClicked() {
     }
 
     msgEdit->clear(); // 清空编辑器
+}
+
+void ChatWidget::appendFile(const QString &username, const QString &filename, const QString &filePath) {
+    QFileInfo info(filePath);
+    QString ext = info.suffix().toLower();
+
+    QString user = "[" + username + "]";
+    QString msg_final;
+
+    if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "bmp" || ext == "gif") {
+        QImage image(filePath);
+        if (!image.isNull()) {
+            chatArea->append(user + ":");
+            chatArea->document()->addResource(QTextDocument::ImageResource, QUrl(filePath), QVariant(image));
+            chatArea->append(QString("<img src='%1'>").arg(filePath));
+            return;
+        }
+    } else {
+        // 普通文件显示为下载链接
+        msg_final = QString("<b>%1:</b> <a href='file:///%2'>%3</a>").arg(user, filePath, filename);
+    }
+
+    chatArea->append(msg_final);
 }
