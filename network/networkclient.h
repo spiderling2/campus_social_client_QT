@@ -37,6 +37,7 @@ public:
 
 
 
+
 signals:
     void messageReceived(const QVariantMap& msg);
     void errorOccurred(const QString& error);

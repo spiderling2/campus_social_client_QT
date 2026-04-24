@@ -95,50 +95,86 @@ void NetworkClient::joinEvent(const QString userName,const QString& eventName) {
     sendJson(obj);
 }
 
-
-
-
-void NetworkClient::sendFile(const QString& eventName, const QString& filepath) {
+void NetworkClient::sendFile(const QString& eventName, const QString& filepath)
+{
     QFile file(filepath);
     if (!file.open(QIODevice::ReadOnly)) {
-        emit errorOccurred("Failed to open file");
+        emit errorOccurred("Failed to open file: " + filepath);
         return;
     }
-    QByteArray data = file.readAll();
-    // 简单协议: type=file, event=..., content=base64
-    QJsonObject obj {{"type","file"}, {"event", eventName}, {"content", QString(data.toBase64())}};
-    socket->write(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+
+    QByteArray fileData = file.readAll();
+    file.close();
+
+    // 1️⃣ 先发送文件头 JSON (msg_type = 1)
+    QJsonObject headerObj;
+    headerObj["type"] = "send_file";
+    QJsonObject data;
+    data["username"] = UserService::instance().get_username();
+    data["eventname"] = eventName;
+    data["filename"] = QFileInfo(filepath).fileName();
+    data["filesize"] = static_cast<qint64>(fileData.size());
+    headerObj["data"] = data;
+
+    QByteArray headerJson = QJsonDocument(headerObj).toJson(QJsonDocument::Compact);
+    quint32 payload_len = static_cast<quint32>(headerJson.size());
+    quint32 total_len = 1 + 4 + payload_len; // type + payload_len + payload
+
+    QByteArray packet;
+    packet.resize(4 + total_len);
+    qToBigEndian(total_len, reinterpret_cast<uchar*>(packet.data())); // 总长度
+    packet[4] = 1; // 文件头类型
+    qToBigEndian(payload_len, reinterpret_cast<uchar*>(packet.data() + 5));
+    memcpy(packet.data() + 9, headerJson.constData(), payload_len);
+
+    socket->write(packet);
+    socket->flush();
+
+    // 2️⃣ 再发送文件内容原始字节流
+    socket->write(fileData);
+    socket->flush();
+    qDebug() << "sendFile:" << filepath << "size:" << fileData.size();
 }
+
+
+
+#include <QtEndian>
 
 void NetworkClient::onReadyRead()
 {
     buffer.append(socket->readAll());
 
     while (true) {
-        // === 1. 如果正在接收文件，优先接收文件内容 ===
+        // =========================
+        // 1. 文件接收模式（独立流）
+        // =========================
         if (receivingFile.mode) {
-            qint64 remaining = receivingFile.filesize - receivingFile.receivedBytes;
-            if (buffer.isEmpty()) break; // 没数据就等下一次 readyRead
+            if (buffer.isEmpty())
+                break;
 
-            QByteArray chunk = buffer.left(remaining);
+            qint64 remaining = receivingFile.filesize - receivingFile.receivedBytes;
+            if (remaining <= 0) {
+                receivingFile.mode = false;
+                break;
+            }
+
+            QByteArray chunk = buffer.left(qMin<qint64>(remaining, buffer.size()));
             buffer.remove(0, chunk.size());
 
             receivingFile.data.append(chunk);
             receivingFile.receivedBytes += chunk.size();
 
             if (receivingFile.receivedBytes >= receivingFile.filesize) {
-                // 文件接收完成
-                QDir dir(saveDir);
-                QString savePath = dir.filePath(receivingFile.filename);
+                QString savePath = QDir(saveDir).filePath(receivingFile.filename);
+
                 QFile file(savePath);
                 if (file.open(QIODevice::WriteOnly)) {
                     file.write(receivingFile.data);
                     file.close();
-                    qDebug() << "file recived successfully:" << savePath;
-                    // 发信号通知 UI 显示
-                    emit fileReceived(current_event, receivingFile.filename, savePath);
+                    qDebug() << "file received successfully:" << savePath;
+                    emit fileReceived(receivingFile.username, receivingFile.filename, savePath);
                 } else {
-                    qDebug() << "error:" << savePath;
+                    qDebug() << "error writing file:" << savePath;
                 }
 
                 // 重置状态
@@ -147,51 +183,99 @@ void NetworkClient::onReadyRead()
                 receivingFile.filesize = 0;
                 receivingFile.receivedBytes = 0;
             }
-
-            continue; // 继续处理缓冲区
+            continue;
         }
 
-        // === 2. 如果还没在接收文件，先读取 JSON header ===
-        if (expectedSize == 0) {
-            if (buffer.size() < 4) break; // header 长度不够
-            expectedSize = qFromBigEndian<qint32>(
-                reinterpret_cast<const uchar*>(buffer.constData()));
-            buffer.remove(0, 4);
+        // =========================
+        // 2. 检查总长度
+        // =========================
+        if (buffer.size() < 4)
+            break;
+
+        quint32 total_be = 0;
+        memcpy(&total_be, buffer.constData(), 4);
+        quint32 total_len = qFromBigEndian(total_be);
+
+        if (total_len < 5 + 4) { // type(1) + payload_len(4)
+            buffer.remove(0, 1); // 重同步
+            continue;
         }
 
-        if (buffer.size() < expectedSize) break; // JSON 数据未到齐
+        if (buffer.size() < total_len + 4)
+            break;
 
-        QByteArray jsonData = buffer.left(expectedSize);
-        buffer.remove(0, expectedSize);
-        expectedSize = 0;
+        buffer.remove(0, 4); // 移除 total
 
-        QJsonDocument doc = QJsonDocument::fromJson(jsonData);
-        if (!doc.isNull() && doc.isObject()) {
+        // =========================
+        // 3. 读取类型和payload长度
+        // =========================
+        uint8_t msg_type = static_cast<uint8_t>(buffer[0]);
+        buffer.remove(0, 1);
+
+        quint32 payload_len_be = 0;
+        memcpy(&payload_len_be, buffer.constData(), 4);
+        quint32 payload_len = qFromBigEndian(payload_len_be);
+        buffer.remove(0, 4);
+
+        if (buffer.size() < payload_len) {
+            buffer.prepend(QByteArray(1, msg_type)); // 回滚
+            QByteArray pl_len_bytes(reinterpret_cast<char*>(&payload_len_be), 4);
+            buffer.prepend(pl_len_bytes);
+            buffer.prepend(QByteArray(4, 0)); // 回滚total? 可选
+            break;
+        }
+
+        QByteArray payload = buffer.left(payload_len);
+        buffer.remove(0, payload_len);
+
+        // =========================
+        // 4. 根据类型处理
+        // =========================
+        if (msg_type == 0) {
+            // JSON 消息
+            QJsonParseError err;
+            QJsonDocument doc = QJsonDocument::fromJson(payload, &err);
+            if (err.error != QJsonParseError::NoError) {
+                qDebug() << "JSON parse error:" << err.errorString();
+                continue;
+            }
+
+            if (!doc.isObject())
+                continue;
+
             QJsonObject obj = doc.object();
             QJsonObject data = obj.value("data").toObject();
 
-            if (data.contains("filename") && data.contains("filesize")) {
-                // 开始接收文件
-                receivingFile.filename = data.value("filename").toString();
-                receivingFile.filesize = data.value("filesize").toVariant().toLongLong();
-                receivingFile.receivedBytes = 0;
-                receivingFile.data.clear();
-                receivingFile.mode = true;
+            // 普通消息
+            QtConcurrent::run([this, obj]() {
+                QVariantMap res = handle_message(obj);
+                if (!res.isEmpty())
+                    emit messageReceived(res);
+            });
 
-                qDebug() << "开始接收文件:" << receivingFile.filename
-                         << "大小:" << receivingFile.filesize;
-            } else {
-                // 普通消息
-                QtConcurrent::run([this, obj]() {
-                    QVariantMap res = handle_message(obj);
-                    if (!res.isEmpty())
-                        emit messageReceived(res);
-                });
+        } else if (msg_type == 1) {
+            // 文件头 JSON
+            QJsonParseError err;
+            QJsonDocument doc = QJsonDocument::fromJson(payload, &err);
+            if (err.error != QJsonParseError::NoError || !doc.isObject()) {
+                qDebug() << "file header parse error";
+                continue;
             }
+            QJsonObject data = doc.object().value("data").toObject();
+            receivingFile.username=data.value("username").toString();
+            receivingFile.filename = data.value("filename").toString();
+            receivingFile.filesize = data.value("filesize").toVariant().toLongLong();
+            receivingFile.receivedBytes = 0;
+            receivingFile.data.clear();
+            receivingFile.mode = true;
+
+            qDebug() << "开始接收文件:" << receivingFile.filename
+                     << "大小:" << receivingFile.filesize;
+        } else {
+            qDebug() << "未知消息类型:" << msg_type;
         }
     }
 }
-
 QVariantMap NetworkClient::handle_message(const QJsonObject& msg)
 {
     // 转成 JSON 文本
@@ -297,28 +381,34 @@ QVariantMap NetworkClient::handle_message(const QJsonObject& msg)
     }
 }
 
-#include <QtEndian>  // 用于 qToBigEndian
+#include <QtEndian>
 
-// 私有方法，发送长度 + JSON 数据
 void NetworkClient::sendJson(const QJsonObject& obj)
 {
     QByteArray jsonData = QJsonDocument(obj).toJson(QJsonDocument::Compact);
-    qint32 len = jsonData.size();
+    quint32 payload_len = static_cast<quint32>(jsonData.size());
 
-    QByteArray header;
-    header.resize(4);
-    qToBigEndian(len, reinterpret_cast<uchar*>(header.data()));
-    QJsonDocument doc(obj);
+    // 总长度 = type(1) + payload_len(4) + payload
+    quint32 total_len = 1 + 4 + payload_len;
 
-    // 转成字符串
-    QString jsonStr = doc.toJson(QJsonDocument::Compact); // 或 QJsonDocument::Indented 美化输出
+    QByteArray packet;
+    packet.resize(4 + total_len);
 
-    // 输出到控制台
-    qDebug() << jsonStr;
+    // 写总长度（4B）
+    qToBigEndian(total_len, reinterpret_cast<uchar*>(packet.data()));
 
-    socket->write(header);
-    socket->write(jsonData);
-    socket->flush();  // 可选：强制立即发送
+    // 写类型 (1B) JSON = 0
+    packet[4] = 0;
+
+    // 写 payload_len (4B)
+    qToBigEndian(payload_len, reinterpret_cast<uchar*>(packet.data() + 5));
+
+    // 写 payload
+    memcpy(packet.data() + 9, jsonData.constData(), payload_len);
+
+    socket->write(packet);
+    socket->flush();
+    qDebug() << "sendJson:" << QJsonDocument(obj).toJson(QJsonDocument::Compact);
 }
 
 void NetworkClient::set_current_event(const QString& eventname)
@@ -344,9 +434,11 @@ void NetworkClient::disconnectFromServer()
 }
 
 
-void NetworkClient::sendMessageOrFile(const QString& eventName, const QVariant& content) {
+
+void NetworkClient::sendMessageOrFile(const QString& eventName, const QVariant& content)
+{
     if (content.type() == QVariant::String) {
-        // 普通文本
+        // 普通文本消息，调用 sendJson
         QJsonObject obj;
         obj["type"] = "send";
         QJsonObject data;
@@ -354,53 +446,16 @@ void NetworkClient::sendMessageOrFile(const QString& eventName, const QVariant& 
         data["eventname"] = eventName;
         data["content"] = content.toString();
         obj["data"] = data;
-        sendJson(obj); // 直接发送 JSON
+
+        sendJson(obj);
+
     } else if (content.type() == QVariant::StringList) {
-        // 假设是文件路径列表
+        // 文件列表
         QStringList files = content.toStringList();
         for (const QString& filePath : files) {
-            QFile file(filePath);
-            if (!file.open(QIODevice::ReadOnly)) {
-                emit errorOccurred(QString("无法打开文件: %1").arg(filePath));
-                continue;
-            }
-
-            QByteArray fileData = file.readAll();
-            file.close();
-
-            // 构建 JSON 元信息
-            QJsonObject obj;
-            obj["type"] = "send_file";
-            QJsonObject data;
-            data["username"] = UserService::instance().get_username();
-            data["eventname"] = eventName;
-            data["filename"] = QFileInfo(filePath).fileName();
-            data["filesize"] = static_cast<qint64>(fileData.size());
-            obj["data"] = data;
-
-            // 发送长度 + JSON
-            QByteArray jsonData = QJsonDocument(obj).toJson(QJsonDocument::Compact);
-            qint32 len = jsonData.size();
-            QByteArray header;
-            header.resize(4);
-            qToBigEndian(len, reinterpret_cast<uchar*>(header.data()));
-            QJsonDocument doc(obj);
-
-            // 转成字符串
-            QString jsonStr = doc.toJson(QJsonDocument::Compact); // 或 QJsonDocument::Indented 美化输出
-
-            // 输出到控制台
-            qDebug() << jsonStr;
-            socket->write(header);
-            socket->write(jsonData);
-            socket->flush();
-
-            // 然后发送文件内容
-            socket->write(fileData);
-            socket->flush();
-
+            sendFile(eventName, filePath);
         }
+    } else {
+        qDebug() << "[sendMessageOrFile] Unsupported QVariant type:" << content.typeName();
     }
 }
-
-
